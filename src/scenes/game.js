@@ -110,7 +110,7 @@ Game.restart1 = function() {
 	this.scene.restart();
 };
 Game.update = function() {
-	if (score >= 5) {
+	if (score >= 50) {
 		this.airplaneBanner.x -= 4;
 		if (this.airplaneBanner.x <= -250) {
 			this.scene.start(endingScene);
