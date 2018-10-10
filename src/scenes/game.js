@@ -10,6 +10,7 @@ import airplane from '../assets/airplane.png';
 import playAgain from '../assets/play-again.png';
 import animal1 from '../assets/animal1.png';
 
+import flowerEnding from '../assets/flowerEnding.png';
 let number1Text;
 let number2Text;
 const WinningText = 'YOU WON!!!';
@@ -30,6 +31,7 @@ Game.preload = function() {
 	this.load.image('endingSceneImg', endingSceneImg);
 	this.load.image('playAgain', playAgain);
 	this.load.image('animal1', animal1);
+	this.load.image('flowerEnding', flowerEnding);
 };
 
 Game.create = function() {
@@ -51,8 +53,8 @@ Game.create = function() {
 	scoreText = this.add.text(470, 60, scoreText, { fontSize: '27px', fill: '#000' });
 
 	scoreText.setText('Score: ' + score);
-	const leButton = this.add.image(220, 500, 'lessButton').setInteractive({ useHandCursor: true });
-	leButton.on('pointerdown', () => {
+	this.leButton = this.add.image(220, 500, 'lessButton').setInteractive({ useHandCursor: true });
+	this.leButton.on('pointerdown', () => {
 		if (number1 < number2) {
 			this.result = 'right';
 			score += 5;
@@ -60,34 +62,54 @@ Game.create = function() {
 			this.scene.restart();
 		} else if (number1 > number2 || number1 === number2) {
 			resultText.setText('WRONG ANSWER...');
+			this.time.addEvent({
+				delay: 2000,
+				callback: this.restart1,
+				callbackScope: this
+			});
+			// this.scene.restart();
 		}
 	});
-	const gtButton = this.add.image(440, 500, 'greaterButton').setInteractive({ useHandCursor: true });
-	gtButton.on('pointerdown', () => {
+	// this.leButton = this.physics.add.image('lessButton');
+	this.gtButton = this.add.image(440, 500, 'greaterButton').setInteractive({ useHandCursor: true });
+	this.gtButton.on('pointerdown', () => {
 		if (number1 > number2) {
 			score += 5;
 			scoreText.setText('Score ' + score);
 			this.scene.restart();
 		} else if (number1 < number2 || number1 === number2) {
 			resultText.setText('WRONG ANSWER...');
+			this.time.addEvent({
+				delay: 2000,
+				callback: this.restart1,
+				callbackScope: this
+			});
+			// this.scene.restart();
 		}
 	});
 
-	const eqButton = this.add.image(660, 500, 'equalButton').setInteractive({ useHandCursor: true });
-	eqButton.on('pointerdown', () => {
+	this.eqButton = this.add.image(660, 500, 'equalButton').setInteractive({ useHandCursor: true });
+	this.eqButton.on('pointerdown', () => {
 		if (number1 === number2) {
 			score += 5;
 			scoreText.setText('Score ' + score);
 			this.scene.restart();
 		} else if (number1 < number2 || number1 > number2) {
 			resultText.setText('WRONG ANSWER...');
+			this.time.addEvent({
+				delay: 2000,
+				callback: this.restart1,
+				callbackScope: this
+			});
 		}
 	});
-
 	number1Text.setText(number1);
 	number2Text.setText(number2);
 };
 
+Game.restart1 = function() {
+	this.scene.restart();
+};
 Game.update = function() {
 	if (score >= 50) {
 		this.airplaneBanner.x -= 4;
@@ -95,17 +117,22 @@ Game.update = function() {
 			this.scene.start(endingScene);
 			score = 0;
 		}
+		this.leButton.visible = false;
+		this.gtButton.visible = false;
+		this.eqButton.visible = false;
 	}
 };
 Game.generateNumbers = function() {
 	return Math.floor(Math.random() * 100);
 };
-export let endingScene = new Phaser.Scene('Ending');
+export const endingScene = new Phaser.Scene('Ending');
 endingScene.create = function() {
 	this.add.image(400, 300, 'bg').setScale(0.5);
+
 	this.add.image(430, 245, 'endingSceneImg').setScale(0.23);
-	this.add.image(230, 200, 'animal1');
-	this.add.text(330, 180, WinningText, { fontFamily: 'Amarante', fontSize: '60px', fill: '#000' });
+	this.add.image(270, 240, 'animal1');
+	this.add.image(320, 220, 'flowerEnding');
+	this.add.text(330, 200, WinningText, { fontFamily: 'Amarante', fontSize: '60px', fill: '#000' });
 	const playAgainButton = this.add
 		.sprite(535, 350, 'playAgain')
 		.setScale(0.5)
