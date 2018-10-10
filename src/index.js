@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 
 import constants from './config/constants';
 import GameScene from './scenes/game';
+import { endingScene } from './scenes/game';
 
 const config = {
 	type: Phaser.AUTO,
@@ -16,7 +17,7 @@ const config = {
 			debug: false
 		}
 	},
-	scene: [ GameScene ]
+	scene: [ GameScene, endingScene ]
 };
 
 // eslint-disable-next-line no-new

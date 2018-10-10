@@ -2,19 +2,21 @@ import Phaser from 'phaser';
 import bg from '../assets/bg.jpg';
 import lessButton from '../assets/lessthan.png';
 import book from '../assets/book.png';
-
-import wrongAns from '../assets/wrongAns.png';
+import endingSceneImg from '../assets/woodEnding.png';
 import scoreImg from '../assets/score.png';
 import greaterButton from '../assets/greaterthan.png';
 import equalButton from '../assets/equal.png';
 import airplane from '../assets/airplane.png';
+import playAgain from '../assets/play-again.png';
+import animal1 from '../assets/animal1.png';
 
 let number1Text;
 let number2Text;
-let headingText;
+const WinningText = 'YOU WON!!!';
 let resultText;
 let score = 0;
 let scoreText;
+
 const Game = new Phaser.Scene('Game');
 Game.preload = function() {
 	this.load.image('bg', bg);
@@ -25,6 +27,9 @@ Game.preload = function() {
 	this.load.image('greaterButton', greaterButton);
 	this.load.image('equalButton', equalButton);
 	this.load.image('airplane', airplane);
+	this.load.image('endingSceneImg', endingSceneImg);
+	this.load.image('playAgain', playAgain);
+	this.load.image('animal1', animal1);
 };
 
 Game.create = function() {
@@ -36,13 +41,13 @@ Game.create = function() {
 	this.airplaneBanner = this.physics.add.sprite(1100, 200, 'airplane');
 	this.airplaneBanner.body.setAllowGravity(false);
 
-	let number1 = Math.floor(Math.random() * 100);
-	let number2 = Math.floor(Math.random() * 100);
+	let number1 = Game.generateNumbers();
+	let number2 = Game.generateNumbers();
 	// let heading = 'Compare two numbers';
 	// headingText = this.add.text(30, 30, heading, { fontFamily: 'Amarante', fontSize: '20px', fill: '#000' });
 	number1Text = this.add.text(260, 270, number1, { fontSize: '50px', fill: '#000' });
 	number2Text = this.add.text(520, 270, number2, { fontSize: '50px', fill: '#000' });
-	resultText = this.add.text(300, 400, '', { fontSize: '30px', fill: 'red' });
+	resultText = this.add.text(170, 380, '', { fontSize: '60px', fill: 'red' });
 	scoreText = this.add.text(470, 60, scoreText, { fontSize: '27px', fill: '#000' });
 
 	scoreText.setText('Score: ' + score);
@@ -54,8 +59,7 @@ Game.create = function() {
 			scoreText.setText('Score:' + score);
 			this.scene.restart();
 		} else if (number1 > number2 || number1 === number2) {
-			// console.log('Wrong Answer...');
-			resultText.setText('Wrong Answer!!!');
+			resultText.setText('WRONG ANSWER...');
 		}
 	});
 	const gtButton = this.add.image(440, 500, 'greaterButton').setInteractive({ useHandCursor: true });
@@ -65,8 +69,7 @@ Game.create = function() {
 			scoreText.setText('Score ' + score);
 			this.scene.restart();
 		} else if (number1 < number2 || number1 === number2) {
-			// console.log('Wrong Answer...');
-			resultText.setText('Wrong Answer!!!');
+			resultText.setText('WRONG ANSWER...');
 		}
 	});
 
@@ -77,19 +80,36 @@ Game.create = function() {
 			scoreText.setText('Score ' + score);
 			this.scene.restart();
 		} else if (number1 < number2 || number1 > number2) {
-			// console.log('Wrong Answer...');
-			resultText.setText('Wrong Answer!!!');
+			resultText.setText('WRONG ANSWER...');
 		}
 	});
 
-	// headingText.setText(heading);
 	number1Text.setText(number1);
 	number2Text.setText(number2);
 };
 
 Game.update = function() {
-	if (score >= 10) {
+	if (score >= 50) {
 		this.airplaneBanner.x -= 4;
+		if (this.airplaneBanner.x <= -250) {
+			this.scene.start(endingScene);
+			score = 0;
+		}
 	}
+};
+Game.generateNumbers = function() {
+	return Math.floor(Math.random() * 100);
+};
+export let endingScene = new Phaser.Scene('Ending');
+endingScene.create = function() {
+	this.add.image(400, 300, 'bg').setScale(0.5);
+	this.add.image(430, 245, 'endingSceneImg').setScale(0.23);
+	this.add.image(230, 200, 'animal1');
+	this.add.text(330, 180, WinningText, { fontFamily: 'Amarante', fontSize: '60px', fill: '#000' });
+	const playAgainButton = this.add
+		.sprite(535, 350, 'playAgain')
+		.setScale(0.5)
+		.setInteractive({ useHandCursor: true });
+	playAgainButton.on('pointerdown', () => this.scene.start(Game));
 };
 export default Game;
