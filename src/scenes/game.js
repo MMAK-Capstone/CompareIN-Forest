@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import bg from '../assets/bg.jpg';
 import lessButton from '../assets/lessthan.png';
 import book from '../assets/book.png';
-import banner from '../assets/banner.png';
+
 import wrongAns from '../assets/wrongAns.png';
 import scoreImg from '../assets/score.png';
 import greaterButton from '../assets/greaterthan.png';
