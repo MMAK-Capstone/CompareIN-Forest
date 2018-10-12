@@ -111,7 +111,7 @@ Game.restart1 = function() {
 };
 Game.update = function() {
 	if (score >= 50) {
-		this.airplaneBanner.x -= 4;
+		this.airplaneBanner.x -= 4; // adding animation to once you reach 50
 		if (this.airplaneBanner.x <= -250) {
 			this.scene.start(endingScene);
 			score = 0;
